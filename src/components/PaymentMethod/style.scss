@@ -1,0 +1,37 @@
+* {
+     font-family: "Roboto", sans-serif;
+}
+
+
+.form-container {
+    height: 20.625rem !important;
+}
+
+
+.payment-input {
+    width: 100%;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px !important;
+    height: 100px;
+    padding: 10px;
+    margin-bottom: 70px;
+    margin-top: 30px;
+    border-radius: 4px;
+}
+
+.cpf-input {
+    width: 100%;
+    height: 100px;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+}
+
+.save-buttom {
+    color: #4e7af1;
+}
+
+.cancel-buttom {
+     color: #fc3838;
+    margin-right: 20px;
+}
