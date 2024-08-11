@@ -1,6 +1,74 @@
 <template>
-  <div>
-    <h1>Obrigado pelo seu pedido!</h1>
-    <p>Seu pedido foi realizado com sucesso.</p>
+  <div class="success-page">
+    <v-container class="container">
+      <v-row class="align-center">
+        <v-col cols="auto">
+          <v-img :src="logo" alt="Logo" class="logo-image"></v-img>
+        </v-col>
+        <v-col>
+          <h1 class="app-title">DEEP SPACE STORE</h1>
+        </v-col>
+      </v-row>
+      <v-row justify="center">
+        <v-col>
+          <v-card class="pa-4">
+            <v-card-title class="title">
+              Pedido Realizado com Sucesso!
+            </v-card-title>
+            <v-card-text>
+              <div class="card" v-if="paymentMethod === 'card'">
+                Pagamento efetuado com sucesso, pedido realizado.
+                <v-img
+                  :src="successImage"
+                  class="success-image"
+                  contain
+                ></v-img>
+              </div>
+              <div class="pix" v-else-if="paymentMethod === 'pix'">
+                Por favor, escaneie o QR Code para validar o pagamento.
+                <v-img :src="qRCodeImage" class="qrcode-image" contain></v-img>
+              </div>
+              <div class="boleto" v-else-if="paymentMethod === 'boleto'">
+                Escaneie o código de barras no seu aplicativo bancário.
+                <v-img
+                  :src="barcodeImage"
+                  class="barcode-image"
+                  contain
+                ></v-img>
+              </div>
+              <div v-else>Método de pagamento desconhecido.</div>
+            </v-card-text>
+            <v-btn class="buttom" @click="goBack"> Voltar para Home </v-btn>
+          </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
+
+<script>
+import barcodeImage from "@/assets/bar-code.png";
+import logo from "@/assets/deep-space-store-logo.png";
+import qRCodeImage from "@/assets/qr-code.png";
+import successImage from "@/assets/success.png";
+
+export default {
+  data() {
+    const paymentMethod = this.$route.params.paymentMethod;
+    return {
+      paymentMethod: paymentMethod || "",
+      barcodeImage: barcodeImage,
+      logo: logo,
+      successImage: successImage,
+      qRCodeImage: qRCodeImage
+    };
+  },
+  methods: {
+    goBack() {
+      this.$router.push("/");
+    }
+  }
+};
+</script>
+
+<style scoped lang="scss" src="./style.scss"></style>

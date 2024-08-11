@@ -15,47 +15,89 @@
       <v-text-field
         v-model="cpf"
         class="cpf-input"
-        label="CPF"
+        label="CPF*"
         :rules="[rules.cpf]"
         required
       ></v-text-field>
 
-      <v-text-field
-        v-if="paymentMethod === 'card'"
-        v-model="cardNumber"
-        class="card-input"
-        v-mask="'#### #### #### ####'"
-        label="Número do Cartão"
-        :rules="[rules.cardNumber]"
-        required
-      ></v-text-field>
+      <v-row v-if="paymentMethod === 'card'" class="credit-card-fields">
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            v-model="cardNumber"
+            class="card-input"
+            v-mask="'#### #### #### ####'"
+            label="Número do Cartão*"
+            :rules="[rules.cardNumber]"
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="12" sm="6" md="4">
+          <v-text-field
+            v-model="name"
+            class="card-name"
+            label="Nome do titular*"
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="6" sm="3" md="2">
+          <v-text-field
+            v-model="validCard"
+            class="card-valid"
+            v-mask="'##/##'"
+            label="MM/AA*"
+            required
+          ></v-text-field>
+        </v-col>
+
+        <v-col cols="6" sm="3" md="2">
+          <v-text-field
+            v-model="cvv"
+            class="card-cvv"
+            v-mask="'###'"
+            label="CVV*"
+            required
+          ></v-text-field>
+        </v-col>
+      </v-row>
     </v-form>
   </div>
 </template>
 
 <script>
-import { isValidCreditCardNumber } from "creditcards-types";
-
 export default {
-  components: {},
   data() {
     return {
       paymentMethod: "",
       cpf: "",
       cardNumber: "",
+      name: "",
+      validCard: "",
+      cvv: "",
       valid: false,
       rules: {
         required: (v) => !!v || "Campo obrigatório",
-        cpf: (v) => /^\d{11}$/.test(v) || "CPF inválido",
-        cardNumber: (v) =>
-          isValidCreditCardNumber(v) || "Número de cartão inválido"
+        cpf: (v) => /^\d{11}$/.test(v)
       }
     };
   },
   methods: {
     submit() {
+      if (!this.cpf) {
+        this.$toast("CPF é obrigatório para finalizar a compra.");
+        return;
+      }
+
       if (this.$refs.form.validate()) {
-        this.$emit("finish");
+        this.$emit("finish", {
+          paymentMethod: this.paymentMethod,
+          cpf: this.cpf,
+          cardNumber: this.cardNumber,
+          name: this.name,
+          validCard: this.validCard,
+          cvv: this.cvv
+        });
       }
     }
   }

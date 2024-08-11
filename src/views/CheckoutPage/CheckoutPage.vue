@@ -29,13 +29,13 @@
             <div class="loading-bar"></div>
             <div v-if="step === 1">
               <div class="personal-data-title">Dados Pessoais:</div>
-              <PersonalData />
+              <PersonalData ref="personalDataComponent" />
               <v-btn class="next-step-buttom" @click="nextStep">Próximo</v-btn>
             </div>
 
             <div v-if="step === 2">
               <div class="delivery-data-title">Dados de Entrega:</div>
-              <DeliveryData />
+              <DeliveryData ref="deliveryDataComponent" />
               <v-btn class="back-step-buttom" @click="previousStep"
                 >Voltar</v-btn
               >
@@ -44,13 +44,16 @@
 
             <div v-if="step === 3">
               <div class="payment-method-title">Método de Pagamento:</div>
-              <PaymentMethod @save-card-info="handleCardInfoSaved" />
+              <PaymentMethod
+                ref="paymentMethodComponent"
+                @finish="handlePaymentMethod"
+              />
               <v-btn class="back-step-buttom" @click="previousStep"
                 >Voltar</v-btn
               >
-              <v-btn class="finish-checkout-buttom" @click="handleSubmit">
-                Finalizar Compra
-              </v-btn>
+              <v-btn class="finish-checkout-buttom" @click="submitPaymentMethod"
+                >Finalizar Compra</v-btn
+              >
             </div>
           </v-card-subtitle>
         </v-card>
@@ -66,7 +69,6 @@ import DeliveryData from "@/components/DeliveryData/DeliveryData.vue";
 import OfferPage from "@/components/OfferPage/OfferPage.vue";
 import PaymentMethod from "@/components/PaymentMethod/PaymentMethod.vue";
 import PersonalData from "@/components/PersonalData/PersonalData.vue";
-import router from "@/router";
 import axios from "axios";
 
 export default {
@@ -80,6 +82,7 @@ export default {
     return {
       step: 1,
       percentage: 0,
+      paymentMethod: "",
       offer: null,
       logo
     };
@@ -105,6 +108,20 @@ export default {
       this.percentage = [0, 50, 100][step - 1];
     },
     nextStep() {
+      if (this.step === 1) {
+        const isPersonalDataValid = this.$refs.personalDataComponent.isValid;
+        if (!isPersonalDataValid) {
+          this.$toast("Por favor, preencha todos os campos do formulário.");
+          return;
+        }
+      }
+      if (this.step === 2) {
+        const isDeliveryDataValid = this.$refs.deliveryDataComponent.isValid;
+        if (!isDeliveryDataValid) {
+          this.$toast("Por favor, preencha todos os campos do formulário.");
+          return;
+        }
+      }
       if (this.step < 3) {
         this.step += 1;
         this.updatePercentage(this.step);
@@ -116,27 +133,27 @@ export default {
         this.updatePercentage(this.step);
       }
     },
-
-    handleSubmit() {
-      const offerCode = this.$route.params.OFFER_CODE;
-      if (offerCode) {
-        this.submitOrder(offerCode);
+    async submitPaymentMethod(offerCode) {
+      const isValid = this.$refs.paymentMethodComponent.submit();
+      if (isValid) {
+        try {
+          await axios.post(
+            `https://api.deepspacestore.com/offers/${offerCode}/create_order`
+          );
+          this.$router.push({
+            path: `/checkout/success/${this.paymentMethod}`
+          });
+        } catch (error) {
+          console.error("Erro:", error);
+          this.$toast("Erro ao fazer a compra!");
+        }
       }
     },
-
-    async submitOrder(offerCode) {
-      try {
-        await axios.post(
-          `https://api.deepspacestore.com/offers/${offerCode}/create_order`
-        );
-        router.push("/checkout/success");
-      } catch (error) {
-        console.error("Erro:", error);
-        alert("Deu erro!");
-      }
-    },
-    handleCloseModal() {
-      console.log("Modal de pagamento fechado");
+    handlePaymentMethod(data) {
+      this.paymentMethod = data.paymentMethod;
+      this.$router.push({
+        path: `/checkout/success/${this.paymentMethod}`
+      });
     }
   },
   mounted() {

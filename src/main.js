@@ -1,5 +1,7 @@
 import Vue from "vue";
 import VueTheMask from "vue-the-mask";
+import Toast from "vue-toastification";
+import "vue-toastification/dist/index.css";
 import "vuetify/dist/vuetify.min.css";
 import App from "./App.vue";
 import vuetify from "./plugins/vuetify";
@@ -19,6 +21,7 @@ async function prepareApp() {
 }
 
 Vue.use(VueTheMask);
+Vue.use(Toast);
 
 prepareApp().then(() => {
   new Vue({

@@ -1,21 +1,18 @@
 import { http, HttpResponse } from "msw";
 
 const offerData = {
-  id: "1",
-  name: "Miniatura da Millennium Falcon",
+  id: "ae55qa4qa656",
+  name: "Boneco Buzz lightyear",
   price: 600.0,
   items: [
-    "Miniatura detalhada",
+    "Boneco detalhado",
     "Base para exposição",
     "Certificado de autenticidade"
   ],
   paymentMethods: ["Cartão de Crédito", "Boleto Bancário", "Pix"],
-  images: [
-    "https://example.com/images/millennium_falcon_1.jpg",
-    "https://example.com/images/millennium_falcon_2.jpg"
-  ],
+  images: ["https://m.media-amazon.com/images/I/61uqdfdzPhL._AC_SL1000_.jpg"],
   description:
-    "Uma incrível miniatura da Millennium Falcon, perfeita para fãs de Star Wars."
+    "Um incrível boneco do Buzz lightyear, perfeito para fãs de Toy Story."
 };
 
 export const handlers = [
@@ -26,7 +23,7 @@ export const handlers = [
     "https://api.deepspacestore.com/offers/:offerCode/create_order",
     (req) => {
       const data = req.body;
-      if (data?.cpf === "00000000000000") {
+      if (data.cpf === "000.000.000-00") {
         return new HttpResponse(null, {
           status: 400,
           statusText: "CPF inválido"
@@ -35,7 +32,7 @@ export const handlers = [
       return HttpResponse.json({
         id: "2556aqaaq56a4a45",
         status: "SUCCESS",
-        offerCode: req.params.offerCode
+        offerCode: "ae55qa4qa656"
       });
     }
   )

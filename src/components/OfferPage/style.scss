@@ -1,12 +1,40 @@
 * {
-    font-family: "Roboto", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 .first-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
   background-color: #4e7af1;
   border-radius: 8px;
   padding: 16px;
   height: 36.625rem !important;
   width: 100%;
   color: #ffffff;
+}
+
+.title {
+  margin-bottom: 20px;
+}
+
+.offer-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.centered-image {
+  margin-bottom: 20px;
+}
+
+.description {
+  color: #fff;
+  margin-top: 5px;
+}
+
+.list, .price, .payment-form, .payment, .items {
+  color: #fff;
+  list-style-type: none;
 }

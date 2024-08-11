@@ -1,20 +1,20 @@
 <template>
   <div class="form-container">
-    <v-form ref="form" v-model="valid">
+    <v-form ref="form">
       <v-text-field
         v-model="cep"
-        label="CEP"
+        label="CEP*"
         required
         @blur="fetchAddress"
       ></v-text-field>
-      <v-text-field v-model="address" label="Endereço" required></v-text-field>
-      <v-text-field v-model="number" label="Número" required></v-text-field>
+      <v-text-field v-model="address" label="Endereço*" required></v-text-field>
+      <v-text-field v-model="number" label="Número*" required></v-text-field>
       <v-text-field
         v-model="neighborhood"
-        label="Bairro"
+        label="Bairro*"
         required
       ></v-text-field>
-      <v-text-field v-model="city" label="Cidade" required></v-text-field>
+      <v-text-field v-model="city" label="Cidade*" required></v-text-field>
     </v-form>
   </div>
 </template>
@@ -33,6 +33,11 @@ export default {
         required: (v) => !!v || "Campo obrigatório"
       }
     };
+  },
+  computed: {
+    isValid() {
+      return this.$refs.form.validate();
+    }
   },
   methods: {
     clearForm() {
@@ -65,17 +70,17 @@ export default {
                 this.city = data.localidade || "";
               } else {
                 this.clearForm();
-                alert("CEP não encontrado.");
+                this.$toast("CEP não encontrado.");
               }
             })
             .catch((error) => {
               console.error("Erro ao buscar endereço:", error);
               this.clearForm();
-              alert("Erro ao buscar endereço.");
+              this.$toast("Erro ao buscar endereço.");
             });
         } else {
           this.clearForm();
-          alert("Formato de CEP inválido.");
+          this.$toast("Formato de CEP inválido.");
         }
       } else {
         this.clearForm();

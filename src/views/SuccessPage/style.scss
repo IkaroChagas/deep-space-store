@@ -1,0 +1,61 @@
+.container {
+  width: 700px;
+}
+.success-page {
+  font-family: "Roboto", sans-serif;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.logo-image {
+  width: 150px;
+  height: 150px;
+}
+
+.app-title {
+  font-size: 30px;
+  font-weight: 900;
+  color: #4e7af1;
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
+  height: 100%;
+}
+
+.title {
+  font-size: 24px;
+  font-weight: bold;
+  color: #4e7af1;
+}
+
+.buttom {
+  color: #4e7af1;
+  bottom: 40px;
+}
+
+.buttom {
+  color: #4e7af1;
+  bottom: 40px;
+}
+
+.boleto, .card,
+.pix {
+  font-size: 18px;
+  font-weight: 900;
+  color: #8b8b8b;
+}
+
+.barcode-image {
+  width: 100%;
+  height: 350px;
+}
+
+.qrcode-image, .success-image {
+  width: 100%;
+  height: 350px;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}

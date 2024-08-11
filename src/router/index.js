@@ -15,8 +15,12 @@ export default new Router({
     },
     {
       path: "/",
-      redirect: "/123"
+      redirect: "/ae55qa4qa656"
     },
-    { path: "/checkout/success", name: "SuccessPage", component: SuccessPage }
+    {
+      path: "/checkout/success/:paymentMethod",
+      name: "SuccessPage",
+      component: SuccessPage
+    }
   ]
 });

@@ -1,9 +1,9 @@
 <template>
   <div class="form-container">
-    <v-form ref="form" v-model="valid" class="test">
+    <v-form ref="form" v-model="valid">
       <v-text-field
         v-model="name"
-        label="Nome Completo"
+        label="Nome Completo*"
         class="name-field"
         :rules="[rules.required]"
         required
@@ -12,13 +12,14 @@
         v-model="email"
         label="E-mail"
         class="email-field"
+        :rules="[rules.email]"
       ></v-text-field>
       <v-text-field
         v-model="phone"
-        label="Telefone"
+        label="Telefone*"
         v-mask="'(##) ##### ####'"
         class="phone-field"
-        :rules="[rules.required]"
+        :rules="[rules.phoneRule]"
         required
       ></v-text-field>
     </v-form>
@@ -35,9 +36,16 @@ export default {
       valid: false,
       rules: {
         required: (v) => !!v || "Campo obrigatório",
-        email: (v) => /.+@.+\..+/.test(v) || "E-mail inválido"
+        email: (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
+        phoneRule: (v) =>
+          (v && v.length >= 11) || "Telefone deve ter pelo menos 11 dígitos"
       }
     };
+  },
+  computed: {
+    isValid() {
+      return this.$refs.form.validate();
+    }
   },
   methods: {
     submit() {

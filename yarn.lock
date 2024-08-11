@@ -7973,13 +7973,6 @@ vue-loader@^17.0.0:
     hash-sum "^2.0.0"
     watchpack "^2.4.0"
 
-vue-paycard@^0.7.0:
-  version "0.7.0"
-  resolved "https://registry.yarnpkg.com/vue-paycard/-/vue-paycard-0.7.0.tgz#111e4f7f695e8920102f892f948078907e44c624"
-  integrity sha512-r/mk3QYPiUD0NKfn/Hz33z8fHg9Xxwlu+UfQcMZKvI7I87LPt9LxIiEw2GpLWTZW7Y3RiEwzLyS5EAa8o02Kvg==
-  dependencies:
-    vue "^2.6.14"
-
 vue-router@^3.5.1:
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.6.5.tgz#95847d52b9a7e3f1361cb605c8e6441f202afad8"
@@ -8010,6 +8003,11 @@ vue-the-mask@^0.11.1:
   version "0.11.1"
   resolved "https://registry.yarnpkg.com/vue-the-mask/-/vue-the-mask-0.11.1.tgz#91ee01008354ae57bccc79bb61b65f32d971d9d5"
   integrity sha512-UquSfnSWejD0zAfcD+3jJ1chUAkOAyoxya9Lxh9acCRtrlmGcAIvd0cQYraWqKenbuZJUdum+S174atv2AuEHQ==
+
+vue-toastification@^1.7.14:
+  version "1.7.14"
+  resolved "https://registry.yarnpkg.com/vue-toastification/-/vue-toastification-1.7.14.tgz#4d6af4085f7122463c2821a27f851898b265cc85"
+  integrity sha512-khZR8t3NWZ/JJ2MZxXLbesHrRJ8AKa75PY5Zq8yMifF9x8lHq8ljYkC0d2PD9yahooygQB5tcFyRDkbbIPx8hw==
 
 vue@^2.6.14:
   version "2.7.16"
