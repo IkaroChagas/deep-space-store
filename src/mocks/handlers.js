@@ -23,7 +23,7 @@ export const handlers = [
     "https://api.deepspacestore.com/offers/:offerCode/create_order",
     (req) => {
       const data = req.body;
-      if (data.cpf === "000.000.000-00") {
+      if (data.cpf === "00000000000") {
         return new HttpResponse(null, {
           status: 400,
           statusText: "CPF inválido"

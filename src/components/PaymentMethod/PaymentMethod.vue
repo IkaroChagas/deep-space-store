@@ -78,14 +78,33 @@ export default {
       valid: false,
       rules: {
         required: (v) => !!v || "Campo obrigatório",
-        cpf: (v) => /^\d{11}$/.test(v)
+        cpf: (v) => /^\d{11}$/.test(v) || "CPF inválido"
       }
     };
   },
   methods: {
+    validateCPF(cpf) {
+      const cleanCPF = cpf.replace(/[^\d]/g, "");
+
+      if (cleanCPF === "000.000.000-00") {
+        this.$toast("CPF inválido.");
+        return true;
+      }
+
+      if (cleanCPF.length !== 11) {
+        this.$toast("CPF deve ter 11 dígitos.");
+        return true;
+      }
+
+      return true;
+    },
     submit() {
       if (!this.cpf) {
         this.$toast("CPF é obrigatório para finalizar a compra.");
+        return;
+      }
+
+      if (!this.validateCPF(this.cpf)) {
         return;
       }
 
@@ -98,6 +117,8 @@ export default {
           validCard: this.validCard,
           cvv: this.cvv
         });
+      } else {
+        this.$toast("Preencha todos os campos corretamente.");
       }
     }
   }
