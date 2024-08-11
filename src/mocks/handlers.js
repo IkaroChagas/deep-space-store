@@ -1,7 +1,7 @@
 import { http, HttpResponse } from "msw";
 
 const offerData = {
-  id: offerCode,
+  id: "1",
   name: "Miniatura da Millennium Falcon",
   price: 600.0,
   items: [
@@ -19,14 +19,24 @@ const offerData = {
 };
 
 export const handlers = [
-  http.get("http://localhost:8080/:offerCode", (req) => {
-    const { offerCode } = req.params;
-    if (offerCode === "offerCode") {
-      return HttpResponse.json(offerData);
+  http.get("https://api.deepspacestore.com/offers/:offerCode", () => {
+    return HttpResponse.json(offerData);
+  }),
+  http.post(
+    "https://api.deepspacestore.com/offers/:offerCode/create_order",
+    (req) => {
+      const data = req.body;
+      if (data?.cpf === "00000000000000") {
+        return new HttpResponse(null, {
+          status: 400,
+          statusText: "CPF inválido"
+        });
+      }
+      return HttpResponse.json({
+        id: "2556aqaaq56a4a45",
+        status: "SUCCESS",
+        offerCode: req.params.offerCode
+      });
     }
-    return HttpResponse.json(
-      { error: "Oferta não encontrada" },
-      { status: 404 }
-    );
-  })
+  )
 ];

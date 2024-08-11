@@ -20,97 +20,43 @@
         required
       ></v-text-field>
 
-      <v-dialog
-        v-model="isCreditCardModalOpen"
-        max-width="500px"
-        @click:outside="closeCreditCardModal"
-      >
-        <v-card>
-          <v-card-title>Insira os dados do cartão:</v-card-title>
-          <v-card-text>
-            <CreditCard
-              ref="cardComponent"
-              :cardName="cardName"
-              :cardNumber="cardNumber"
-              :cardMonth="cardMonth"
-              :cardYear="cardYear"
-              :cardCvv="cardCvv"
-              @update-card-data="updateCardData"
-            />
-          </v-card-text>
-          <v-card-actions>
-            <v-btn class="cancel-buttom" @click="closeCreditCardModal">
-              Cancelar
-            </v-btn>
-            <v-btn class="save-buttom" @click="saveAndCloseModal">Salvar</v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-dialog>
+      <v-text-field
+        v-if="paymentMethod === 'card'"
+        v-model="cardNumber"
+        class="card-input"
+        v-mask="'#### #### #### ####'"
+        label="Número do Cartão"
+        :rules="[rules.cardNumber]"
+        required
+      ></v-text-field>
     </v-form>
   </div>
 </template>
 
 <script>
-import CreditCard from "@/components/CreditCard/CreditCard.vue";
+import { isValidCreditCardNumber } from "creditcards-types";
 
 export default {
-  components: {
-    CreditCard
-  },
+  components: {},
   data() {
     return {
       paymentMethod: "",
       cpf: "",
-      cardName: "",
       cardNumber: "",
-      cardMonth: "",
-      cardYear: "",
-      cardCvv: "",
-      valid: true,
-      isCreditCardModalOpen: false,
+      valid: false,
       rules: {
         required: (v) => !!v || "Campo obrigatório",
-        cpf: (v) => /^\d{11}$/.test(v) || "CPF inválido"
+        cpf: (v) => /^\d{11}$/.test(v) || "CPF inválido",
+        cardNumber: (v) =>
+          isValidCreditCardNumber(v) || "Número de cartão inválido"
       }
     };
   },
-  watch: {
-    paymentMethod(newValue) {
-      if (newValue === "card") {
-        this.isCreditCardModalOpen = true;
-      }
-    }
-  },
   methods: {
-    closeCreditCardModal() {
-      this.isCreditCardModalOpen = false;
-    },
-    saveAndCloseModal() {
-      const cardComponent = this.$refs.cardComponent;
-      const isCardFormValid = cardComponent.validateCardForm();
-
-      if (isCardFormValid) {
-        const cardData = {
-          cardName: this.cardName,
-          cardNumber: this.cardNumber,
-          cardMonth: this.cardMonth,
-          cardYear: this.cardYear,
-          cardCvv: this.cardCvv
-        };
-
-        this.$store.commit("setCardData", cardData);
-        this.$emit("save-card-info", cardData);
-        this.closeCreditCardModal();
-      } else {
-        console.log("Formulário do cartão de crédito inválido");
+    submit() {
+      if (this.$refs.form.validate()) {
+        this.$emit("finish");
       }
-    },
-    updateCardData(cardData) {
-      this.cardName = cardData.cardName;
-      this.cardNumber = cardData.cardNumber;
-      this.cardMonth = cardData.cardMonth;
-      this.cardYear = cardData.cardYear;
-      this.cardCvv = cardData.cardCvv;
     }
   }
 };

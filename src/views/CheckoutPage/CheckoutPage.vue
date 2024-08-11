@@ -44,18 +44,11 @@
 
             <div v-if="step === 3">
               <div class="payment-method-title">Método de Pagamento:</div>
-              <PaymentMethod
-                @close-modal="handleCloseModal"
-                :cardName="cardName"
-                :cardNumber="cardNumber"
-                :cardMonth="cardMonth"
-                :cardYear="cardYear"
-                :cardCvv="cardCvv"
-              />
+              <PaymentMethod @save-card-info="handleCardInfoSaved" />
               <v-btn class="back-step-buttom" @click="previousStep"
                 >Voltar</v-btn
               >
-              <v-btn class="finish-checkout-buttom" @click="submitOrder">
+              <v-btn class="finish-checkout-buttom" @click="handleSubmit">
                 Finalizar Compra
               </v-btn>
             </div>
@@ -88,14 +81,10 @@ export default {
       step: 1,
       percentage: 0,
       offer: null,
-      cardName: "",
-      cardNumber: "",
-      cardMonth: "",
-      cardYear: "",
-      cardCvv: "",
       logo
     };
   },
+
   computed: {
     percent() {
       return `${this.percentage}%`;
@@ -104,7 +93,9 @@ export default {
   methods: {
     async fetchOffer(offerCode) {
       try {
-        const response = await axios.get(`http://localhost:8080/${offerCode}`);
+        const response = await axios.get(
+          `https://api.deepspacestore.com/offers/${offerCode}`
+        );
         this.offer = response.data;
       } catch (error) {
         console.error("Erro:", error);
@@ -125,10 +116,24 @@ export default {
         this.updatePercentage(this.step);
       }
     },
-    submitOrder() {
-      console.log("Submetendo pedido..."); // Verifique se isso aparece no console
-      router.push("/success");
-      console.log("Pedido submetido, redirecionando para /success");
+
+    handleSubmit() {
+      const offerCode = this.$route.params.OFFER_CODE;
+      if (offerCode) {
+        this.submitOrder(offerCode);
+      }
+    },
+
+    async submitOrder(offerCode) {
+      try {
+        await axios.post(
+          `https://api.deepspacestore.com/offers/${offerCode}/create_order`
+        );
+        router.push("/checkout/success");
+      } catch (error) {
+        console.error("Erro:", error);
+        alert("Deu erro!");
+      }
     },
     handleCloseModal() {
       console.log("Modal de pagamento fechado");
@@ -136,7 +141,6 @@ export default {
   },
   mounted() {
     const offerCode = this.$route.params.OFFER_CODE;
-    console.log("Offer Code:", offerCode);
     if (offerCode) {
       this.fetchOffer(offerCode);
     } else {

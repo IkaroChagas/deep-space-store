@@ -5,12 +5,13 @@
   "scripts": {
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service serve"
+    "dev": "vue-cli-service serve --port 3000"
   },
   "dependencies": {
     "add": "^2.0.6",
     "axios": "^1.7.3",
     "core-js": "^3.8.3",
+    "creditcards-types": "^4.0.0",
     "cypress": "^13.13.2",
     "msw": "^2.3.5",
     "vue": "^2.6.14",
@@ -56,5 +57,11 @@
     "> 1%",
     "last 2 versions",
     "not dead"
-  ]
+  ],
+  "msw": {
+    "workerDirectory": [
+      "",
+      "public"
+    ]
+  }
 }

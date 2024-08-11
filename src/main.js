@@ -6,10 +6,25 @@ import vuetify from "./plugins/vuetify";
 import router from "./router/index";
 import store from "./store";
 
+async function prepareApp() {
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.NODE_ENV === "test"
+  ) {
+    const { worker } = await import("./mocks/browser");
+    return worker.start();
+  }
+
+  return Promise.resolve();
+}
+
 Vue.use(VueTheMask);
-new Vue({
-  router,
-  store,
-  vuetify,
-  render: (h) => h(App)
-}).$mount("#app");
+
+prepareApp().then(() => {
+  new Vue({
+    router,
+    store,
+    vuetify,
+    render: (h) => h(App)
+  }).$mount("#app");
+});

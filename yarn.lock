@@ -3295,6 +3295,11 @@ create-jest@^29.7.0:
     jest-util "^29.7.0"
     prompts "^2.0.1"
 
+creditcards-types@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/creditcards-types/-/creditcards-types-4.0.0.tgz#aeb850cdaae95cd727e4ff28aa4d5ccf9f354f2e"
+  integrity sha512-7BxHVU4rqlBG4KV38lqdM/haUlfd8lDOYyX8gC3vpUqFMEc/5zI538+b7Y/nx39UYApcibGKchECHeQ4CgGMsw==
+
 cross-spawn@^5.0.1:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/cross-spawn/-/cross-spawn-5.1.0.tgz#e8bd0efee58fcff6f8f94510a0a554bbfa235449"
