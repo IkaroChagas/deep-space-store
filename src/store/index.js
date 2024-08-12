@@ -17,6 +17,7 @@ export default new Vuex.Store({
       state.deliveryData = data;
     },
     setPaymentMethod(state, data) {
+      state.paymentMethod = {};
       state.paymentMethod = data;
     },
     setCardData(state, cardData) {

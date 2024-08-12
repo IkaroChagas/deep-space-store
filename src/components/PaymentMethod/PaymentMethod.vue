@@ -82,6 +82,11 @@ export default {
       }
     };
   },
+  computed: {
+    isValid() {
+      return this.$refs.form.validate();
+    }
+  },
   methods: {
     validateCPF(cpf) {
       const cleanCPF = cpf.replace(/[^\d]/g, "");
@@ -98,6 +103,7 @@ export default {
 
       return true;
     },
+
     submit() {
       if (!this.cpf) {
         this.$toast("CPF é obrigatório para finalizar a compra.");
@@ -109,17 +115,47 @@ export default {
       }
 
       if (this.$refs.form.validate()) {
-        this.$emit("finish", {
-          paymentMethod: this.paymentMethod,
-          cpf: this.cpf,
-          cardNumber: this.cardNumber,
-          name: this.name,
-          validCard: this.validCard,
-          cvv: this.cvv
-        });
+        this.payloadData();
+        return true;
       } else {
         this.$toast("Preencha todos os campos corretamente.");
+        return false;
       }
+    },
+    payloadData() {
+      let form = {};
+      switch (this.paymentMethod) {
+        case "boleto":
+          form = {
+            paymentMethod: "boleto",
+            cpf: this.cpf
+          };
+          break;
+
+        case "pix":
+          form = {
+            paymentMethod: "pix",
+            cpf: this.cpf
+          };
+          break;
+
+        case "card":
+          form = {
+            paymentMethod: "card",
+            cpf: this.cpf,
+            cardNumber: this.cardNumber,
+            name: this.name,
+            validCard: this.validCard,
+            cvv: this.cvv
+          };
+          break;
+
+        default:
+          this.$toast("Método de pagamento não suportado");
+          return;
+      }
+
+      this.$store.commit("setPaymentMethod", form);
     }
   }
 };

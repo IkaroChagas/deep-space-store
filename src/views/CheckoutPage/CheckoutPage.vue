@@ -44,10 +44,7 @@
 
             <div v-if="step === 3">
               <div class="payment-method-title">Método de Pagamento:</div>
-              <PaymentMethod
-                ref="paymentMethodComponent"
-                @finish="handlePaymentMethod"
-              />
+              <PaymentMethod ref="paymentMethodComponent" />
               <v-btn class="back-step-buttom" @click="previousStep"
                 >Voltar</v-btn
               >
@@ -82,9 +79,9 @@ export default {
     return {
       step: 1,
       percentage: 0,
-      paymentMethod: "",
       offer: null,
-      logo
+      logo,
+      paymentMethod: {}
     };
   },
 
@@ -114,6 +111,13 @@ export default {
           this.$toast("Por favor, preencha todos os campos do formulário.");
           return;
         }
+        const personalData = this.$refs.personalDataComponent;
+        let form = {
+          name: personalData.name,
+          email: personalData.email,
+          phone: personalData.phone
+        };
+        this.$store.commit("setPersonalData", form);
       }
       if (this.step === 2) {
         const isDeliveryDataValid = this.$refs.deliveryDataComponent.isValid;
@@ -121,6 +125,15 @@ export default {
           this.$toast("Por favor, preencha todos os campos do formulário.");
           return;
         }
+        const deliveryData = this.$refs.deliveryDataComponent;
+        let form = {
+          cep: deliveryData.cep,
+          address: deliveryData.address,
+          city: deliveryData.city,
+          neighborhood: deliveryData.neighborhood,
+          number: deliveryData.number
+        };
+        this.$store.commit("setDeliveryData", form);
       }
       if (this.step < 3) {
         this.step += 1;
@@ -135,33 +148,34 @@ export default {
     },
     async submitPaymentMethod(offerCode) {
       const isValid = this.$refs.paymentMethodComponent.submit();
-      if (isValid) {
-        try {
-          await axios.post(
-            `https://api.deepspacestore.com/offers/${offerCode}/create_order`
-          );
-          this.$router.push({
-            path: `/checkout/success/${this.paymentMethod}`
-          });
-        } catch (error) {
-          console.error("Erro:", error);
-          this.$toast("Erro ao fazer a compra!");
-        }
+      if (!isValid) {
+        return;
+      }
+      const payload = {
+        personalData: this.$store.state.personalData,
+        deliveryData: this.$store.state.deliveryData,
+        paymentData: this.$store.state.paymentData
+      };
+      try {
+        await axios.post(payload)(
+          `https://api.deepspacestore.com/offers/${offerCode}/create_order`,
+          payload
+        );
+        this.$router.push({
+          path: `/checkout/success/${this.$store.state.paymentData.paymentMethod}`
+        });
+      } catch (error) {
+        console.error("Erro:", error);
+        this.$toast("Erro ao fazer a compra!");
       }
     },
-    handlePaymentMethod(data) {
-      this.paymentMethod = data.paymentMethod;
-      this.$router.push({
-        path: `/checkout/success/${this.paymentMethod}`
-      });
-    }
-  },
-  mounted() {
-    const offerCode = this.$route.params.OFFER_CODE;
-    if (offerCode) {
-      this.fetchOffer(offerCode);
-    } else {
-      console.error("OFFER_CODE não foi encontrado.");
+    mounted() {
+      const offerCode = this.$route.params.OFFER_CODE;
+      if (offerCode) {
+        this.fetchOffer(offerCode);
+      } else {
+        console.error("OFFER_CODE não foi encontrado.");
+      }
     }
   }
 };

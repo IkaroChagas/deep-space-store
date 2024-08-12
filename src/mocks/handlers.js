@@ -23,6 +23,8 @@ export const handlers = [
     "https://api.deepspacestore.com/offers/:offerCode/create_order",
     (req) => {
       const data = req.body;
+      console.log("corpo 1", req);
+      console.log("corpo 2", data);
       if (data.cpf === "00000000000") {
         return new HttpResponse(null, {
           status: 400,

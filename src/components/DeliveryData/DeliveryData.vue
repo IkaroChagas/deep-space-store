@@ -88,6 +88,7 @@ export default {
     },
     submit() {
       if (this.$refs.form.validate()) {
+        console.log(this.$refs.form);
         this.$emit("next");
       }
     }
