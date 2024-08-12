@@ -1,4 +1,3 @@
-// src/setupTests.js
 import { server } from "./mocks/server";
 
 beforeAll(() => server.listen());

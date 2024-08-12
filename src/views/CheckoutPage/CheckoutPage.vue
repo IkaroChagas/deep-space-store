@@ -14,7 +14,6 @@
           <OfferPage />
         </v-card>
       </v-col>
-
       <v-col cols="12" md="6">
         <v-card class="second-container">
           <v-card-title>
@@ -146,23 +145,32 @@ export default {
         this.updatePercentage(this.step);
       }
     },
-    async submitPaymentMethod(offerCode) {
+    async submitPaymentMethod() {
       const isValid = this.$refs.paymentMethodComponent.submit();
       if (!isValid) {
         return;
       }
+
       const payload = {
         personalData: this.$store.state.personalData,
         deliveryData: this.$store.state.deliveryData,
-        paymentData: this.$store.state.paymentData
+        paymentData: this.$store.state.paymentMethod
       };
+
       try {
-        await axios.post(payload)(
+        const offerCode = this.$route.params.OFFER_CODE;
+        await axios.post(
           `https://api.deepspacestore.com/offers/${offerCode}/create_order`,
-          payload
+          payload,
+          {
+            headers: {
+              "Content-Type": "application/json"
+            }
+          }
         );
+        const paymentMethod = this.$store.state.paymentMethod.paymentMethod;
         this.$router.push({
-          path: `/checkout/success/${this.$store.state.paymentData.paymentMethod}`
+          path: `/checkout/success/${paymentMethod}`
         });
       } catch (error) {
         console.error("Erro:", error);

@@ -4,18 +4,25 @@
       <v-radio-group
         v-model="paymentMethod"
         class="payment-input"
+        id="radio-payment-method"
         :rules="[rules.required]"
         required
       >
-        <v-radio label="Boleto" value="boleto"></v-radio>
-        <v-radio label="Cartão de Crédito" value="card"></v-radio>
-        <v-radio label="Pix" value="pix"></v-radio>
+        <v-radio id="radio-boleto" label="Boleto" value="boleto"></v-radio>
+        <v-radio
+          id="radio-credit-card"
+          label="Cartão de Crédito"
+          value="card"
+        ></v-radio>
+        <v-radio id="radio-pix" label="Pix" value="pix"></v-radio>
       </v-radio-group>
 
       <v-text-field
         v-model="cpf"
         class="cpf-input"
         label="CPF*"
+        id="cpf-input"
+        v-mask="'###.###.###-##'"
         :rules="[rules.cpf]"
         required
       ></v-text-field>
@@ -24,6 +31,7 @@
         <v-col cols="12" sm="6" md="4">
           <v-text-field
             v-model="cardNumber"
+            id="credit-card-number-input"
             class="card-input"
             v-mask="'#### #### #### ####'"
             label="Número do Cartão*"
@@ -36,6 +44,7 @@
           <v-text-field
             v-model="name"
             class="card-name"
+            id="credit-card-name-input"
             label="Nome do titular*"
             required
           ></v-text-field>
@@ -45,6 +54,7 @@
           <v-text-field
             v-model="validCard"
             class="card-valid"
+            id="credit-card-valid-input"
             v-mask="'##/##'"
             label="MM/AA*"
             required
@@ -54,6 +64,7 @@
         <v-col cols="6" sm="3" md="2">
           <v-text-field
             v-model="cvv"
+            id="credit-card-cvv-input"
             class="card-cvv"
             v-mask="'###'"
             label="CVV*"
@@ -66,6 +77,8 @@
 </template>
 
 <script>
+import { validateCPF } from "@/utils/cpfValidator";
+
 export default {
   data() {
     return {
@@ -78,7 +91,8 @@ export default {
       valid: false,
       rules: {
         required: (v) => !!v || "Campo obrigatório",
-        cpf: (v) => /^\d{11}$/.test(v) || "CPF inválido"
+        cpf: (v) => validateCPF(v) || "CPF inválido",
+        cardNumber: (v) => v.length === 19 || "Número do cartão inválido"
       }
     };
   },
@@ -88,41 +102,24 @@ export default {
     }
   },
   methods: {
-    validateCPF(cpf) {
-      const cleanCPF = cpf.replace(/[^\d]/g, "");
-
-      if (cleanCPF === "000.000.000-00") {
-        this.$toast("CPF inválido.");
-        return true;
-      }
-
-      if (cleanCPF.length !== 11) {
-        this.$toast("CPF deve ter 11 dígitos.");
-        return true;
-      }
-
-      return true;
-    },
-
     submit() {
-      if (!this.cpf) {
-        this.$toast("CPF é obrigatório para finalizar a compra.");
-        return;
-      }
-
-      if (!this.validateCPF(this.cpf)) {
-        return;
-      }
-
       if (this.$refs.form.validate()) {
-        this.payloadData();
+        const form = {
+          paymentMethod: this.paymentMethod,
+          cpf: this.cpf,
+          cardNumber: this.cardNumber,
+          name: this.name,
+          validCard: this.validCard,
+          cvv: this.cvv
+        };
+        this.$store.commit("setPaymentMethod", form);
         return true;
       } else {
         this.$toast("Preencha todos os campos corretamente.");
         return false;
       }
     },
-    payloadData() {
+    async payloadData() {
       let form = {};
       switch (this.paymentMethod) {
         case "boleto":
@@ -152,10 +149,22 @@ export default {
 
         default:
           this.$toast("Método de pagamento não suportado");
-          return;
+          return false;
       }
-
-      this.$store.commit("setPaymentMethod", form);
+      try {
+        const response = await this.$store.dispatch("submitOrder", form);
+        if (
+          response.status === 400 &&
+          response.data.message === "CPF inválido"
+        ) {
+          this.$toast("CPF inválido.");
+          return false;
+        }
+        return true;
+      } catch (error) {
+        this.$toast("Erro ao enviar pedido.");
+        return false;
+      }
     }
   }
 };

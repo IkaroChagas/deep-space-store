@@ -2,19 +2,36 @@
   <div class="form-container">
     <v-form ref="form">
       <v-text-field
+        id="zipcode-input"
         v-model="cep"
         label="CEP*"
         required
         @blur="fetchAddress"
       ></v-text-field>
-      <v-text-field v-model="address" label="Endereço*" required></v-text-field>
-      <v-text-field v-model="number" label="Número*" required></v-text-field>
+      <v-text-field
+        id="address-input"
+        v-model="address"
+        label="Endereço*"
+        required
+      ></v-text-field>
+      <v-text-field
+        id="address-number-input"
+        v-model="number"
+        label="Número*"
+        required
+      ></v-text-field>
       <v-text-field
         v-model="neighborhood"
+        id="neighborhood-input"
         label="Bairro*"
         required
       ></v-text-field>
-      <v-text-field v-model="city" label="Cidade*" required></v-text-field>
+      <v-text-field
+        id="city-input"
+        v-model="city"
+        label="Cidade*"
+        required
+      ></v-text-field>
     </v-form>
   </div>
 </template>
@@ -88,7 +105,6 @@ export default {
     },
     submit() {
       if (this.$refs.form.validate()) {
-        console.log(this.$refs.form);
         this.$emit("next");
       }
     }

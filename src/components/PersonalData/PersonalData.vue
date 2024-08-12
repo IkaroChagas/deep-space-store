@@ -3,6 +3,7 @@
     <v-form ref="form" v-model="valid">
       <v-text-field
         v-model="name"
+        id="name-input"
         label="Nome Completo*"
         class="name-field"
         :rules="[rules.required]"
@@ -10,12 +11,14 @@
       ></v-text-field>
       <v-text-field
         v-model="email"
+        id="email-input"
         label="E-mail"
         class="email-field"
         :rules="[rules.email]"
       ></v-text-field>
       <v-text-field
         v-model="phone"
+        id="phone-input"
         label="Telefone*"
         v-mask="'(##) ##### ####'"
         class="phone-field"
