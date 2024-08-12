@@ -1,24 +1,19 @@
-# deep-space-store
+# DEEP-SPACE-STORE
 
-## Project setup
-```
-yarn install
-```
+Este projeto é uma tela de checkout que simula uma oferta de um produto, com métodos de pagamento em cartão de crédito, PIX e boleto.
 
-### Compiles and hot-reloads for development
-```
-yarn serve
-```
+## Clone o projeto
 
-### Compiles and minifies for production
-```
-yarn build
-```
+## Comandos para Instalação e Execução:
 
-### Lints and fixes files
-```
-yarn lint
-```
+### Instalação:
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+# yarn install
+
+### Rodar em Desenvolvimento:
+
+# yarn dev
+
+### Testes E2E com Cypress:
+
+# yarn cypress open
