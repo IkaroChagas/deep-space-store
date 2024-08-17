@@ -33,6 +33,8 @@
 </template>
 
 <script>
+import { getOrder } from "@/api/offers";
+
 export default {
   data() {
     return {
@@ -45,11 +47,9 @@ export default {
   methods: {
     async fetchOffer() {
       try {
-        const response = await fetch("https://api.deepspacestore.com/offers/1");
-        const data = await response.json();
-        this.offer = data;
+        this.offer = await getOrder();
       } catch (error) {
-        console.error("Erro ao carregar oferta:", error);
+        this.$toast("Erro ao buscar oferta.");
       }
     }
   }

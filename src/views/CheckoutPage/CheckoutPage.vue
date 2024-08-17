@@ -5,7 +5,7 @@
         <v-img :src="logo" alt="Logo" class="logo-image"></v-img>
       </v-col>
       <v-col>
-        <h1 class="app-title">DEEP SPACE STORE</h1>
+        <h1 class="app-title">{{ $t("checkoutPage.title") }}</h1>
       </v-col>
     </v-row>
     <v-row>
@@ -17,7 +17,7 @@
       <v-col cols="12" md="6">
         <v-card class="second-container">
           <v-card-title>
-            <h2 class="second-title">Checkout</h2>
+            <h2 class="second-title">{{ $t("checkoutPage.subtitle") }}</h2>
           </v-card-title>
           <v-card-subtitle>
             <div class="percetage-value">{{ percent }}</div>
@@ -27,28 +27,40 @@
             ></div>
             <div class="loading-bar"></div>
             <div v-if="step === 1">
-              <div class="personal-data-title">Dados Pessoais:</div>
+              <div class="personal-data-title">
+                {{ $t("checkoutPage.personalDataTitle") }}
+              </div>
               <PersonalData ref="personalDataComponent" />
-              <v-btn class="next-step-buttom" @click="nextStep">Próximo</v-btn>
+              <v-btn class="next-step-buttom" @click="nextStep">{{
+                $t("checkoutPage.nextButtom")
+              }}</v-btn>
             </div>
 
             <div v-if="step === 2">
-              <div class="delivery-data-title">Dados de Entrega:</div>
+              <div class="delivery-data-title">
+                {{ $t("checkoutPage.deliveryDataTitle") }}
+              </div>
               <DeliveryData ref="deliveryDataComponent" />
-              <v-btn class="back-step-buttom" @click="previousStep"
-                >Voltar</v-btn
-              >
-              <v-btn class="next-step-buttom" @click="nextStep">Próximo</v-btn>
+              <v-btn class="back-step-buttom" @click="previousStep">{{
+                $t("checkoutPage.backButtom")
+              }}</v-btn>
+              <v-btn class="next-step-buttom" @click="nextStep">{{
+                $t("checkoutPage.nextButtom")
+              }}</v-btn>
             </div>
 
             <div v-if="step === 3">
-              <div class="payment-method-title">Método de Pagamento:</div>
+              <div class="payment-method-title">
+                {{ $t("checkoutPage.paymentDataTitle") }}
+              </div>
               <PaymentMethod ref="paymentMethodComponent" />
-              <v-btn class="back-step-buttom" @click="previousStep"
-                >Voltar</v-btn
-              >
-              <v-btn class="finish-checkout-buttom" @click="submitPaymentMethod"
-                >Finalizar Compra</v-btn
+              <v-btn class="back-step-buttom" @click="previousStep">{{
+                $t("checkoutPage.backButtom")
+              }}</v-btn>
+              <v-btn
+                class="finish-checkout-buttom"
+                @click="submitPaymentMethod"
+                >{{ $t("checkoutPage.finishCheckoutButtom") }}</v-btn
               >
             </div>
           </v-card-subtitle>
@@ -60,12 +72,12 @@
 </template>
 
 <script>
+import { getOffer, postOffer } from "@/api/offers";
 import logo from "@/assets/deep-space-store-logo.png";
 import DeliveryData from "@/components/DeliveryData/DeliveryData.vue";
 import OfferPage from "@/components/OfferPage/OfferPage.vue";
 import PaymentMethod from "@/components/PaymentMethod/PaymentMethod.vue";
 import PersonalData from "@/components/PersonalData/PersonalData.vue";
-import axios from "axios";
 
 export default {
   components: {
@@ -92,12 +104,9 @@ export default {
   methods: {
     async fetchOffer(offerCode) {
       try {
-        const response = await axios.get(
-          `https://api.deepspacestore.com/offers/${offerCode}`
-        );
-        this.offer = response.data;
+        this.offer = await getOffer(offerCode);
       } catch (error) {
-        console.error("Erro:", error);
+        this.$toast(this.$t("checkoutPage.toast.fetchOffer"));
       }
     },
     updatePercentage(step) {
@@ -107,7 +116,7 @@ export default {
       if (this.step === 1) {
         const isPersonalDataValid = this.$refs.personalDataComponent.isValid;
         if (!isPersonalDataValid) {
-          this.$toast("Por favor, preencha todos os campos do formulário.");
+          this.$toast(this.$t("checkoutPage.toast.warningStep"));
           return;
         }
         const personalData = this.$refs.personalDataComponent;
@@ -121,7 +130,7 @@ export default {
       if (this.step === 2) {
         const isDeliveryDataValid = this.$refs.deliveryDataComponent.isValid;
         if (!isDeliveryDataValid) {
-          this.$toast("Por favor, preencha todos os campos do formulário.");
+          this.$toast(this.$t("checkoutPage.toast.warningStep"));
           return;
         }
         const deliveryData = this.$refs.deliveryDataComponent;
@@ -159,31 +168,22 @@ export default {
 
       try {
         const offerCode = this.$route.params.OFFER_CODE;
-        await axios.post(
-          `https://api.deepspacestore.com/offers/${offerCode}/create_order`,
-          payload,
-          {
-            headers: {
-              "Content-Type": "application/json"
-            }
-          }
-        );
+        await postOffer(offerCode, payload);
         const paymentMethod = this.$store.state.paymentMethod.paymentMethod;
         this.$router.push({
           path: `/checkout/success/${paymentMethod}`
         });
       } catch (error) {
-        console.error("Erro:", error);
-        this.$toast("Erro ao fazer a compra!");
+        this.$toast(this.$t("checkoutPage.toast.submitError"));
       }
-    },
-    mounted() {
-      const offerCode = this.$route.params.OFFER_CODE;
-      if (offerCode) {
-        this.fetchOffer(offerCode);
-      } else {
-        console.error("OFFER_CODE não foi encontrado.");
-      }
+    }
+  },
+  mounted() {
+    const offerCode = this.$route.params.OFFER_CODE;
+    if (offerCode) {
+      this.fetchOffer(offerCode);
+    } else {
+      console.error("OFFER_CODE não foi encontrado.");
     }
   }
 };

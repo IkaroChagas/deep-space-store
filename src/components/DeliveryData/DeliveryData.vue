@@ -4,32 +4,32 @@
       <v-text-field
         id="zipcode-input"
         v-model="cep"
-        label="CEP*"
+        :label="$t('deliveryDataComponent.labels.cep')"
         required
         @blur="fetchAddress"
       ></v-text-field>
       <v-text-field
         id="address-input"
         v-model="address"
-        label="Endereço*"
+        :label="$t('deliveryDataComponent.labels.address')"
         required
       ></v-text-field>
       <v-text-field
         id="address-number-input"
         v-model="number"
-        label="Número*"
+        :label="$t('deliveryDataComponent.labels.number')"
         required
       ></v-text-field>
       <v-text-field
         v-model="neighborhood"
         id="neighborhood-input"
-        label="Bairro*"
+        :label="$t('deliveryDataComponent.labels.neighborhood')"
         required
       ></v-text-field>
       <v-text-field
         id="city-input"
         v-model="city"
-        label="Cidade*"
+        :label="$t('deliveryDataComponent.labels.city')"
         required
       ></v-text-field>
     </v-form>
@@ -37,6 +37,8 @@
 </template>
 
 <script>
+import { fetchAddressByCep } from "@/api/address";
+
 export default {
   data() {
     return {
@@ -47,7 +49,8 @@ export default {
       city: "",
       valid: false,
       rules: {
-        required: (v) => !!v || "Campo obrigatório"
+        required: (v) =>
+          !!v || this.$t("deliveryDataComponent.toast.requiredField")
       }
     };
   },
@@ -62,42 +65,36 @@ export default {
       this.neighborhood = "";
       this.city = "";
     },
-    fetchAddress() {
+    async fetchAddress() {
       const cep = this.cep.replace(/\D/g, "");
 
       if (cep !== "") {
         const validacep = /^[0-9]{8}$/;
 
         if (validacep.test(cep)) {
-          this.address = "Buscando...";
-          this.neighborhood = "Buscando...";
-          this.city = "Buscando...";
+          this.address = this.$t(
+            "deliveryDataComponent.placeholders.searching"
+          );
+          this.neighborhood = this.$t(
+            "deliveryDataComponent.placeholders.searching"
+          );
+          this.city = this.$t("deliveryDataComponent.placeholders.searching");
 
-          fetch(`https://viacep.com.br/ws/${cep}/json/`)
-            .then((response) => {
-              if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-              }
-              return response.json();
-            })
-            .then((data) => {
-              if (!data.erro) {
-                this.address = data.logradouro || "";
-                this.neighborhood = data.bairro || "";
-                this.city = data.localidade || "";
-              } else {
-                this.clearForm();
-                this.$toast("CEP não encontrado.");
-              }
-            })
-            .catch((error) => {
-              console.error("Erro ao buscar endereço:", error);
-              this.clearForm();
-              this.$toast("Erro ao buscar endereço.");
-            });
+          try {
+            const data = await fetchAddressByCep(cep);
+            this.address = data.logradouro || "";
+            this.neighborhood = data.bairro || "";
+            this.city = data.localidade || "";
+          } catch (error) {
+            this.clearForm();
+            this.$toast(
+              error.message ||
+                this.$t("deliveryDataComponent.toast.fetchAddressError")
+            );
+          }
         } else {
           this.clearForm();
-          this.$toast("Formato de CEP inválido.");
+          this.$toast(this.$t("deliveryDataComponent.toast.invalidCep"));
         }
       } else {
         this.clearForm();

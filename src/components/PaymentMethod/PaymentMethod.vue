@@ -90,9 +90,12 @@ export default {
       cvv: "",
       valid: false,
       rules: {
-        required: (v) => !!v || "Campo obrigatório",
-        cpf: (v) => validateCPF(v) || "CPF inválido",
-        cardNumber: (v) => v.length === 19 || "Número do cartão inválido"
+        required: (v) =>
+          !!v || this.$t("paymentMethhodComponent.toast.requiredField"),
+        cpf: (v) =>
+          validateCPF(v) || this.$t("paymentMethhodComponent.toast.invalidCPF"),
+        cardNumber: (v) =>
+          v.length === 19 || this.$t("paymentMethhodComponent.toast.cardNumber")
       }
     };
   },
@@ -115,7 +118,7 @@ export default {
         this.$store.commit("setPaymentMethod", form);
         return true;
       } else {
-        this.$toast("Preencha todos os campos corretamente.");
+        this.$toast(this.$t("paymentMethhodComponent.toast.submitError"));
         return false;
       }
     },
@@ -148,7 +151,7 @@ export default {
           break;
 
         default:
-          this.$toast("Método de pagamento não suportado");
+          this.$toast(this.$t("paymentMethhodComponent.toast.paymentError"));
           return false;
       }
       try {
@@ -157,12 +160,12 @@ export default {
           response.status === 400 &&
           response.data.message === "CPF inválido"
         ) {
-          this.$toast("CPF inválido.");
+          this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
           return false;
         }
         return true;
       } catch (error) {
-        this.$toast("Erro ao enviar pedido.");
+        this.$toast(this.$t("paymentMethhodComponent.toast.submitError"));
         return false;
       }
     }

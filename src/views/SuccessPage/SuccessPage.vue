@@ -6,18 +6,18 @@
           <v-img :src="logo" alt="Logo" class="logo-image"></v-img>
         </v-col>
         <v-col>
-          <h1 class="app-title">DEEP SPACE STORE</h1>
+          <h1 class="app-title">{{ $t("successPage.title") }}</h1>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col>
           <v-card class="pa-4">
             <v-card-title class="title">
-              Pedido Realizado com Sucesso!
+              {{ $t("successPage.subtitle") }}
             </v-card-title>
             <v-card-text>
               <div class="card" v-if="paymentMethod === 'card'">
-                Pagamento efetuado com sucesso, pedido realizado.
+                {{ $t("successPage.cardMethod") }}
                 <v-img
                   :src="successImage"
                   class="success-image"
@@ -25,20 +25,22 @@
                 ></v-img>
               </div>
               <div class="pix" v-else-if="paymentMethod === 'pix'">
-                Por favor, escaneie o QR Code para validar o pagamento.
+                {{ $t("successPage.pixMethod") }}
                 <v-img :src="qRCodeImage" class="qrcode-image" contain></v-img>
               </div>
               <div class="boleto" v-else-if="paymentMethod === 'boleto'">
-                Escaneie o código de barras no seu aplicativo bancário.
+                {{ $t("successPage.boletoMethod") }}
                 <v-img
                   :src="barcodeImage"
                   class="barcode-image"
                   contain
                 ></v-img>
               </div>
-              <div v-else>Método de pagamento desconhecido.</div>
+              <div v-else>{{ $t("successPage.unknownMethod") }}</div>
             </v-card-text>
-            <v-btn class="buttom" @click="goBack"> Voltar para Home </v-btn>
+            <v-btn class="buttom" @click="goBack">{{
+              $t("successPage.backButton")
+            }}</v-btn>
           </v-card>
         </v-col>
       </v-row>
