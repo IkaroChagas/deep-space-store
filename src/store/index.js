@@ -27,16 +27,14 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async submitOrder(form) {
-      console.log("Submitting Order:", form);
+    async submitOrder() {
       const response = await fetch(
         "https://api.deepspacestore.com/offers/:offerCode/create_order",
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
-          },
-          body: JSON.stringify(form)
+          }
         }
       );
       return response;

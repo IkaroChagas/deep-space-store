@@ -1,18 +1,19 @@
+@import "@/styles/variables";
+
 * {
-     font-family: "Roboto", sans-serif;
+     font-family: $font-family;
 }
 
 .form-container {
-    height: 20.625rem !important;
+    height: 330px !important;
 }
 
 .payment-input {
     width: 100%;
-    font-family: "Roboto", sans-serif;
     font-size: 15px !important;
     height: 100px;
     padding: 10px;
-    margin-bottom: 40px;
+    margin-bottom: 40px;;
     margin-top: 30px;
     border-radius: 4px;
 }
@@ -29,13 +30,4 @@
   .v-col {
     padding: 0 10px;
   }
-}
-
-.save-buttom {
-    color: #4e7af1;
-}
-
-.cancel-buttom {
-     color: #fc3838;
-    margin-right: 20px;
 }

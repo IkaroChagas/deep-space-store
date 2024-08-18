@@ -21,12 +21,11 @@ export const handlers = [
   }),
   http.post(
     "https://api.deepspacestore.com/offers/:offerCode/create_order",
-    (req) => {
-      const data = req.body;
-      if (data && data.cpf === "000.000.000-00") {
-        return new HttpResponse(null, {
-          status: 400,
-          statusText: "CPF inválido"
+    async ({ request }) => {
+      const data = await request.json();
+      if (data && data.paymentData.cpf === "000.000.000-00") {
+        return new HttpResponse("CPF inválido", {
+          status: 400
         });
       }
       return HttpResponse.json({

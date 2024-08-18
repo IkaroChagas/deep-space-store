@@ -1,5 +1,7 @@
+@import "@/styles/variables";
+
 * {
-    font-family: "Roboto", sans-serif;
+    font-family: $font-family;
 }
 
 .form-container {

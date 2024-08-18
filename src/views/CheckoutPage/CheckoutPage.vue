@@ -174,7 +174,12 @@ export default {
           path: `/checkout/success/${paymentMethod}`
         });
       } catch (error) {
-        this.$toast(this.$t("checkoutPage.toast.submitError"));
+        if (error.status === 400) {
+          const errorMessage = error.data;
+          this.$toast(errorMessage);
+        } else {
+          this.$toast(this.$t("checkoutPage.toast.submitError"));
+        }
       }
     }
   },

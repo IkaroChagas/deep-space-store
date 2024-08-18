@@ -12,12 +12,16 @@ export const getOffer = async (offerCode) => {
   }
 };
 
-export const postOffer = async (offerCode, payload, form) => {
+export const postOffer = async (offerCode, payload) => {
   try {
     const response = await axios.post(
       `https://api.deepspacestore.com/offers/${offerCode}/create_order`,
       payload,
-      form
+      {
+        headers: {
+          "Content-Type": "application/json"
+        }
+      }
     );
     return response;
   } catch (error) {

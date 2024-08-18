@@ -22,6 +22,11 @@ describe("Formulário de Pagamento", () => {
     cy.get("#cpf-input").type("12345678900");
 
     cy.get("button").contains("Finalizar Compra").click();
+
+    cy.window().then((win) => {
+      cy.stub(win, "dispatchEvent").as("dispatchEvent");
+      cy.get("button").contains("Voltar para Home").click();
+    });
   });
 
   it("deve selecionar o método de pagamento 'Pix', preencher o CPF e clicar em 'Finalizar Compra'", () => {
@@ -30,6 +35,11 @@ describe("Formulário de Pagamento", () => {
     cy.get("#cpf-input").type("12345678900");
 
     cy.get("button").contains("Finalizar Compra").click();
+
+    cy.window().then((win) => {
+      cy.stub(win, "dispatchEvent").as("dispatchEvent");
+      cy.get("button").contains("Voltar para Home").click();
+    });
   });
 
   it('deve mostrar campos de cartão de crédito apenas quando o método de pagamento for "Cartão de Crédito"', () => {
@@ -70,7 +80,7 @@ describe("Formulário de Pagamento", () => {
 
     cy.window().then((win) => {
       cy.stub(win, "dispatchEvent").as("dispatchEvent");
-      cy.get("button").contains("Finalizar Compra").click();
+      cy.get("button").contains("Voltar para Home").click();
     });
   });
 

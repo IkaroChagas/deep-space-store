@@ -100,8 +100,7 @@ export default {
       rules: {
         required: (v) =>
           !!v || this.$t("paymentMethhodComponent.toast.requiredField"),
-        cpf: (v) =>
-          validateCPF(v) || this.$t("paymentMethhodComponent.toast.invalidCPF"),
+        cpf: (v) => validateCPF(v),
         cardNumber: (v) =>
           v.length === 19 || this.$t("paymentMethhodComponent.toast.cardNumber")
       }
@@ -114,65 +113,23 @@ export default {
   },
   methods: {
     submit() {
-      if (this.$refs.form.validate()) {
-        const form = {
-          paymentMethod: this.paymentMethod,
-          cpf: this.cpf,
-          cardNumber: this.cardNumber,
-          name: this.name,
-          validCard: this.validCard,
-          cvv: this.cvv
-        };
-        this.$store.commit("setPaymentMethod", form);
-        return true;
-      } else {
-        this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
-        return false;
-      }
-    },
-    async payloadData() {
-      let form = {};
-      switch (this.paymentMethod) {
-        case "boleto":
-          form = {
-            paymentMethod: "boleto",
-            cpf: this.cpf
-          };
-          break;
-        case "pix":
-          form = {
-            paymentMethod: "pix",
-            cpf: this.cpf
-          };
-          break;
-        case "card":
-          form = {
-            paymentMethod: "card",
-            cpf: this.cpf,
-            cardNumber: this.cardNumber,
-            name: this.name,
-            validCard: this.validCard,
-            cvv: this.cvv
-          };
-          break;
-        default:
-          this.$toast(this.$t("paymentMethhodComponent.toast.paymentError"));
-          return false;
-      }
-      try {
-        const response = await this.$store.dispatch("submitOrder", form);
-        if (response.status === 400) {
-          const responseData = await response.json();
-          if (responseData.message === "CPF inválido") {
-            this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
-            return false;
-          }
-        }
-        return true;
-      } catch (error) {
-        this.$toast(this.$t("paymentMethhodComponent.toast.submitError"));
-        return false;
-      }
+      // frontend validation commited
+
+      // if (this.$refs.form.validate()) {
+      const form = {
+        paymentMethod: this.paymentMethod,
+        cpf: this.cpf,
+        cardNumber: this.cardNumber,
+        name: this.name,
+        validCard: this.validCard,
+        cvv: this.cvv
+      };
+      this.$store.commit("setPaymentMethod", form);
+      return true;
+      // } else {
+      //   this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
+      //   return false;
+      // }
     }
   }
 };

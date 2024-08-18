@@ -5,13 +5,10 @@ export const validateCPF = (value) => {
   }
   cpf = cpf.replace(/[\s.-]*/gim, "");
 
-  if (cpf === "00000000000") {
-    return false;
-  }
-
   if (
     !cpf ||
     cpf.length !== 11 ||
+    cpf === "00000000000" ||
     cpf === "11111111111" ||
     cpf === "22222222222" ||
     cpf === "33333333333" ||

@@ -36,14 +36,12 @@ describe("Formulário de Cadastro", () => {
 
   it("deve enviar o formulário quando todos os campos estiverem válidos", () => {
     cy.get("#name-input").type("João Silva");
-    cy.get("#phone-input").type("joao.silva@example.com");
+    cy.get("#email-input").type("joao.silva@example.com");
     cy.get("#phone-input").type("(12) 34567 8910");
-
-    cy.contains("Próximo").click();
 
     cy.window().then((win) => {
       cy.stub(win, "dispatchEvent").as("dispatchEvent");
-      cy.contains("Próximo").click();
+      cy.get("form").submit();
     });
   });
 });
