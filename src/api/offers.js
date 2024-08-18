@@ -12,16 +12,20 @@ export const getOffer = async (offerCode) => {
   }
 };
 
-export const postOffer = async (offerCode, payload) => {
+export const postOffer = async (offerCode, payload, form) => {
   try {
-    await axios.post(`${BASE_URL}/${offerCode}/create_order`, payload, {
-      headers: {
-        "Content-Type": "application/json"
-      }
-    });
+    const response = await axios.post(
+      `https://api.deepspacestore.com/offers/${offerCode}/create_order`,
+      payload,
+      form
+    );
+    return response;
   } catch (error) {
-    console.error("Erro ao criar pedido:", error);
-    throw error;
+    if (error.response) {
+      throw error.response;
+    } else {
+      throw new Error("Erro desconhecido");
+    }
   }
 };
 

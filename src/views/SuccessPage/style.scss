@@ -1,8 +1,11 @@
+@import "@/styles/variables";
+
 .container {
   width: 700px;
 }
+
 .success-page {
-  font-family: "Roboto", sans-serif;
+  font-family: $font-family; 
   text-align: center;
   display: flex;
   align-items: center;
@@ -16,9 +19,9 @@
 }
 
 .app-title {
-  font-size: 30px;
-  font-weight: 900;
-  color: #4e7af1;
+  font-size: $font-size-large; 
+  font-weight: $font-weight-bold; 
+  color: $primary-color; 
   margin-left: 10px;
   display: flex;
   align-items: center;
@@ -28,24 +31,18 @@
 .title {
   font-size: 24px;
   font-weight: bold;
-  color: #4e7af1;
+  color: $primary-color; 
 }
 
 .buttom {
-  color: #4e7af1;
+  color: $primary-color; 
   bottom: 40px;
 }
 
-.buttom {
-  color: #4e7af1;
-  bottom: 40px;
-}
-
-.boleto, .card,
-.pix {
+.boleto, .card, .pix {
   font-size: 18px;
-  font-weight: 900;
-  color: #8b8b8b;
+  font-weight: $font-weight-bold; 
+  color: $gray-color; 
 }
 
 .barcode-image {

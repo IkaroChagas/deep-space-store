@@ -1,7 +1,7 @@
 <template>
   <v-card ref="offerPage" class="first-container">
     <v-card-title>
-      <h2 class="title">Detalhes do Produto</h2>
+      <h2 class="title">{{ $t("offerPage.title") }}</h2>
     </v-card-title>
     <v-card-subtitle v-if="offer" class="offer-content">
       <v-img
@@ -12,22 +12,27 @@
         class="centered-image"
       />
       <p class="description">{{ offer.description }}</p>
-      <p class="items"><strong>Itens Inclusos:</strong></p>
+      <p class="items">
+        <strong>{{ $t("offerPage.includedItems") }}:</strong>
+      </p>
       <ul class="list">
         <li v-for="(item, index) in offer.items" :key="index">
           {{ item }}
         </li>
       </ul>
       <p class="price">
-        <strong>Preço:</strong> R$ {{ offer.price.toFixed(2) }}
+        <strong>{{ $t("offerPage.price") }}:</strong> R$
+        {{ offer.price.toFixed(2) }}
       </p>
       <p class="payment">
-        <strong class="payment-form">Formas de Pagamento:</strong>
+        <strong class="payment-form"
+          >{{ $t("offerPage.paymentMethods") }}:</strong
+        >
         {{ offer.paymentMethods.join(", ") }}
       </p>
     </v-card-subtitle>
     <v-card-subtitle v-else>
-      <p>Carregando...</p>
+      <p>{{ $t("offerPage.loading") }}</p>
     </v-card-subtitle>
   </v-card>
 </template>
@@ -49,7 +54,7 @@ export default {
       try {
         this.offer = await getOrder();
       } catch (error) {
-        this.$toast("Erro ao buscar oferta.");
+        this.$toast(this.$t("checkoutPage.toast.fetchOffer"));
       }
     }
   }

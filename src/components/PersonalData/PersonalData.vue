@@ -4,7 +4,7 @@
       <v-text-field
         v-model="name"
         id="name-input"
-        label="Nome Completo*"
+        :label="$t('personalDataForm.nameLabel')"
         class="name-field"
         :rules="[rules.required]"
         required
@@ -12,14 +12,14 @@
       <v-text-field
         v-model="email"
         id="email-input"
-        label="E-mail"
+        :label="$t('personalDataForm.emailLabel')"
         class="email-field"
         :rules="[rules.email]"
       ></v-text-field>
       <v-text-field
         v-model="phone"
         id="phone-input"
-        label="Telefone*"
+        :label="$t('personalDataForm.phoneLabel')"
         v-mask="'(##) ##### ####'"
         class="phone-field"
         :rules="[rules.phoneRule]"
@@ -38,10 +38,12 @@ export default {
       phone: "",
       valid: false,
       rules: {
-        required: (v) => !!v || "Campo obrigatório",
-        email: (v) => /.+@.+\..+/.test(v) || "E-mail inválido",
+        required: (v) => !!v || this.$t("personalDataForm.rules.required"),
+        email: (v) =>
+          /.+@.+\..+/.test(v) || this.$t("personalDataForm.rules.invalidEmail"),
         phoneRule: (v) =>
-          (v && v.length >= 11) || "Telefone deve ter pelo menos 11 dígitos"
+          (v && v.length >= 11) ||
+          this.$t("personalDataForm.rules.invalidPhone")
       }
     };
   },

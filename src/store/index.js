@@ -1,4 +1,3 @@
-import axios from "axios";
 import Vue from "vue";
 import Vuex from "vuex";
 
@@ -28,24 +27,19 @@ export default new Vuex.Store({
     }
   },
   actions: {
-    async submitOrder({ state }) {
-      try {
-        const response = await axios.post(
-          "https://api.deepspacestore.com/offers/:offerCode/create_order",
-          state.paymentMethod
-        );
-        if (
-          response.status === 400 &&
-          response.data.message === "CPF inválido"
-        ) {
-          return { success: false, message: "CPF inválido." };
+    async submitOrder(form) {
+      console.log("Submitting Order:", form);
+      const response = await fetch(
+        "https://api.deepspacestore.com/offers/:offerCode/create_order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(form)
         }
-
-        return { success: true, data: response.data };
-      } catch (error) {
-        console.error("Erro ao enviar o pedido:", error);
-        return { success: false, message: "Erro ao enviar o pedido." };
-      }
+      );
+      return response;
     }
   }
 });

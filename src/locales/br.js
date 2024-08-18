@@ -9,9 +9,10 @@ export default {
     paymentDataTitle: "Método de Pagamento:",
     finishCheckoutButtom: "Finalizar Compra",
     toast: {
-      fetchOffer: "Erro ao buscar oferta.",
-      warningStep: "Por favor, preencha todos os campos do formulário.",
-      submitError: "Erro ao finalizar a compra"
+      fetchOffer: "Erro ao buscar a oferta.",
+      submitError: "Erro ao finalizar a compra.",
+      warningStep: "Por favor, preencha todos os campos obrigatórios.",
+      invalidCPF: "CPF inválido. Por favor, revise as informações."
     }
   },
 
@@ -26,6 +27,16 @@ export default {
   },
 
   paymentMethhodComponent: {
+    labels: {
+      boleto: "Boleto",
+      creditCard: "Cartão de Crédito",
+      pix: "Pix",
+      cpf: "CPF*",
+      cardNumber: "Número do Cartão*",
+      cardHolderName: "Nome do titular*",
+      cardExpiry: "MM/AA*",
+      cvv: "CVV*"
+    },
     toast: {
       requiredField: "Campo obrigatório",
       cardNumber: "Número do cartão inválido",
@@ -49,6 +60,25 @@ export default {
     },
     placeholders: {
       searching: "Buscando..."
+    }
+  },
+
+  offerPage: {
+    title: "Detalhes do Produto",
+    includedItems: "Itens Inclusos",
+    price: "Preço",
+    paymentMethods: "Formas de Pagamento",
+    loading: "Carregando..."
+  },
+
+  personalDataForm: {
+    nameLabel: "Nome Completo*",
+    emailLabel: "E-mail",
+    phoneLabel: "Telefone*",
+    rules: {
+      required: "Campo obrigatório",
+      invalidEmail: "E-mail inválido",
+      invalidPhone: "Telefone deve ter pelo menos 11 dígitos"
     }
   }
 };

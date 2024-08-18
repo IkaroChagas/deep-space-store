@@ -8,19 +8,27 @@
         :rules="[rules.required]"
         required
       >
-        <v-radio id="radio-boleto" label="Boleto" value="boleto"></v-radio>
+        <v-radio
+          id="radio-boleto"
+          :label="$t('paymentMethhodComponent.labels.boleto')"
+          value="boleto"
+        ></v-radio>
         <v-radio
           id="radio-credit-card"
-          label="Cartão de Crédito"
+          :label="$t('paymentMethhodComponent.labels.creditCard')"
           value="card"
         ></v-radio>
-        <v-radio id="radio-pix" label="Pix" value="pix"></v-radio>
+        <v-radio
+          id="radio-pix"
+          :label="$t('paymentMethhodComponent.labels.pix')"
+          value="pix"
+        ></v-radio>
       </v-radio-group>
 
       <v-text-field
         v-model="cpf"
         class="cpf-input"
-        label="CPF*"
+        :label="$t('paymentMethhodComponent.labels.cpf')"
         id="cpf-input"
         v-mask="'###.###.###-##'"
         :rules="[rules.cpf]"
@@ -34,7 +42,7 @@
             id="credit-card-number-input"
             class="card-input"
             v-mask="'#### #### #### ####'"
-            label="Número do Cartão*"
+            :label="$t('paymentMethhodComponent.labels.cardNumber')"
             :rules="[rules.cardNumber]"
             required
           ></v-text-field>
@@ -45,7 +53,7 @@
             v-model="name"
             class="card-name"
             id="credit-card-name-input"
-            label="Nome do titular*"
+            :label="$t('paymentMethhodComponent.labels.cardHolderName')"
             required
           ></v-text-field>
         </v-col>
@@ -56,7 +64,7 @@
             class="card-valid"
             id="credit-card-valid-input"
             v-mask="'##/##'"
-            label="MM/AA*"
+            :label="$t('paymentMethhodComponent.labels.cardExpiry')"
             required
           ></v-text-field>
         </v-col>
@@ -67,7 +75,7 @@
             id="credit-card-cvv-input"
             class="card-cvv"
             v-mask="'###'"
-            label="CVV*"
+            :label="$t('paymentMethhodComponent.labels.cvv')"
             required
           ></v-text-field>
         </v-col>
@@ -118,7 +126,7 @@ export default {
         this.$store.commit("setPaymentMethod", form);
         return true;
       } else {
-        this.$toast(this.$t("paymentMethhodComponent.toast.submitError"));
+        this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
         return false;
       }
     },
@@ -131,14 +139,12 @@ export default {
             cpf: this.cpf
           };
           break;
-
         case "pix":
           form = {
             paymentMethod: "pix",
             cpf: this.cpf
           };
           break;
-
         case "card":
           form = {
             paymentMethod: "card",
@@ -149,19 +155,18 @@ export default {
             cvv: this.cvv
           };
           break;
-
         default:
           this.$toast(this.$t("paymentMethhodComponent.toast.paymentError"));
           return false;
       }
       try {
         const response = await this.$store.dispatch("submitOrder", form);
-        if (
-          response.status === 400 &&
-          response.data.message === "CPF inválido"
-        ) {
-          this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
-          return false;
+        if (response.status === 400) {
+          const responseData = await response.json();
+          if (responseData.message === "CPF inválido") {
+            this.$toast(this.$t("paymentMethhodComponent.toast.invalidCPF"));
+            return false;
+          }
         }
         return true;
       } catch (error) {
