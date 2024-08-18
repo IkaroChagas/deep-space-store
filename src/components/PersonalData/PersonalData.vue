@@ -40,7 +40,9 @@ export default {
       rules: {
         required: (v) => !!v || this.$t("personalDataForm.rules.required"),
         email: (v) =>
-          /.+@.+\..+/.test(v) || this.$t("personalDataForm.rules.invalidEmail"),
+          !v ||
+          /.+@.+\..+/.test(v) ||
+          this.$t("personalDataForm.rules.invalidEmail"),
         phoneRule: (v) =>
           (v && v.length >= 11) ||
           this.$t("personalDataForm.rules.invalidPhone")

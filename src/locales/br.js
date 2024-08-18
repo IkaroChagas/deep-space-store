@@ -56,7 +56,8 @@ export default {
     },
     toast: {
       invalidCep: "Formato de CEP inválido.",
-      fetchAddressError: "Erro ao buscar endereço."
+      fetchAddressError: "Erro ao buscar endereço.",
+      requiredField: "Campo obrigatório!"
     },
     placeholders: {
       searching: "Buscando..."

@@ -5,6 +5,7 @@
         id="zipcode-input"
         v-model="cep"
         :label="$t('deliveryDataComponent.labels.cep')"
+        :rules="[rules.required]"
         required
         @blur="fetchAddress"
       ></v-text-field>
@@ -12,12 +13,14 @@
         id="address-input"
         v-model="address"
         :label="$t('deliveryDataComponent.labels.address')"
+        :rules="[rules.required]"
         required
       ></v-text-field>
       <v-text-field
         id="address-number-input"
         v-model="number"
         :label="$t('deliveryDataComponent.labels.number')"
+        :rules="[rules.required]"
         required
       ></v-text-field>
       <v-text-field
@@ -25,11 +28,13 @@
         id="neighborhood-input"
         :label="$t('deliveryDataComponent.labels.neighborhood')"
         required
+        :rules="[rules.required]"
       ></v-text-field>
       <v-text-field
         id="city-input"
         v-model="city"
         :label="$t('deliveryDataComponent.labels.city')"
+        :rules="[rules.required]"
         required
       ></v-text-field>
     </v-form>
@@ -50,7 +55,9 @@ export default {
       valid: false,
       rules: {
         required: (v) =>
-          !!v || this.$t("deliveryDataComponent.toast.requiredField")
+          !!v || this.$t("deliveryDataComponent.toast.requiredField"),
+        cepRequired: () =>
+          !!this.cep || this.$t("deliveryDataComponent.toast.cepRequired")
       }
     };
   },
@@ -101,6 +108,12 @@ export default {
       }
     },
     submit() {
+      this.$refs.form.validate();
+      const isCepValid = /^[0-9]{8}$/.test(this.cep.replace(/\D/g, ""));
+      if (!isCepValid) {
+        this.$toast(this.$t("deliveryDataComponent.toast.invalidCep"));
+        return;
+      }
       if (this.$refs.form.validate()) {
         this.$emit("next");
       }
